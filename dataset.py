@@ -86,9 +86,34 @@ TRUE_LABELS = [
 #     and ML models.
 #
 # Example of how you might extend the lists:
-#
+
+# # Added post 1
 # SAMPLE_POSTS.append("Lowkey stressed but kind of proud of myself")
 # TRUE_LABELS.append("mixed")
-#
-# Remember to keep them aligned:
-#   len(SAMPLE_POSTS) == len(TRUE_LABELS)
+
+# # Added post 2
+# SAMPLE_POSTS.append("Highkey excited about the new project!")
+# TRUE_LABELS.append("positive")
+
+# # Added post 3
+# SAMPLE_POSTS.append("I have no questions so far, but I might later")
+# TRUE_LABELS.append("neutral")
+
+# # Added post 4
+# SAMPLE_POSTS.append("I'm doing not too bad.")
+# TRUE_LABELS.append("neutral")
+
+# #Added post 5
+# SAMPLE_POSTS.append("The instructions are a little confusing, but I think if I work on it more, I'll get it")
+# TRUE_LABELS.append("mixed")
+
+# # Added post 6
+# SAMPLE_POSTS.append("The instructions are a little confusing, but I don't know if it's worth it keep figuring it out")
+# TRUE_LABELS.append("negative")
+
+# # Added post 7
+# SAMPLE_POSTS.append("I'm really not sure how I feel about this")
+# TRUE_LABELS.append("mixed")
+
+#Remember to keep them aligned:
+print(len(SAMPLE_POSTS) == len(TRUE_LABELS))
