@@ -35,6 +35,35 @@ class MoodAnalyzer:
     # ---------------------------------------------------------------------
     # Preprocessing
     # ---------------------------------------------------------------------
+    def detect_negation(self, tokens: List[str]) -> List[str]:
+        """
+        Detect negation in the list of tokens and modify the tokens accordingly.
+
+        This is a simple implementation that looks for negation words like "not" or "never"
+        and modifies the following token to indicate negation.
+
+        For example:
+          - ["not", "happy"] -> ["not_happy"]
+          - ["never", "good"] -> ["never_good"]
+
+        """
+        #SELF TODO VERIFY THIS WORKS
+        negation_words = {"not", "never", "no"}
+        modified_tokens = []
+        skip_next = False
+
+        for i, token in enumerate(tokens):
+            if skip_next:
+                skip_next = False
+                continue
+
+            if token in negation_words and i + 1 < len(tokens):
+                modified_tokens.append(f"{token}_{tokens[i + 1]}")
+                skip_next = True
+            else:
+                modified_tokens.append(token)
+
+        return modified_tokens
 
     def preprocess(self, text: str) -> List[str]:
         """
@@ -54,6 +83,20 @@ class MoodAnalyzer:
         """
         cleaned = text.strip().lower()
         tokens = cleaned.split()
+
+        #Remove punctuation from tokens
+        tokens = [token.strip('.,!?;:"()[]{}') for token in tokens]
+
+        #Handle simple negation
+        tokens = self.detect_negation(tokens)
+
+        # # #Handle simple emojis separately TODO investigate why this is not working
+        # emoji_tokens = []
+        # for token in tokens:
+        #     if token in [":)", ":-)", "🥲", "😂"]:
+        #         emoji_tokens.append(token)
+  
+      
 
         return tokens
 
@@ -75,15 +118,24 @@ class MoodAnalyzer:
           - Give some words higher weights than others (for example "hate" < "annoyed")
           - Treat emojis or slang (":)", "lol", "💀") as strong signals
         """
-        # TODO: Implement this method.
+        # DONE: Implement this method.
         #   1. Call self.preprocess(text) to get tokens.
+        tokens = self.preprocess(text)
         #   2. Loop over the tokens.
+        score = 0
+        for t in tokens:
+            if t in self.positive_words:
+                score += 1
+            elif t in self.negative_words:
+                score -= 1
         #   3. Increase the score for positive words, decrease for negative words.
         #   4. Return the total score.
+        return score
         #
         # Hint: if you implement negation, you may want to look at pairs of tokens,
         # like ("not", "happy") or ("never", "fun").
-        pass
+       
+       
 
     # ---------------------------------------------------------------------
     # Label prediction
@@ -105,12 +157,18 @@ class MoodAnalyzer:
         Just remember that whatever labels you return should match the labels
         you use in TRUE_LABELS in dataset.py if you care about accuracy.
         """
-        # TODO: Implement this method.
+        # DONE: Implement this method.
         #   1. Call self.score_text(text) to get the numeric score.
         #   2. Return "positive" if the score is above 0.
         #   3. Return "negative" if the score is below 0.
         #   4. Return "neutral" otherwise.
-        pass
+        score = self.score_text(text)
+        if score > 0:
+            return "positive"
+        elif score < 0:
+            return "negative"
+        else:
+            return "neutral"
 
     # ---------------------------------------------------------------------
     # Explanations (optional but recommended)
