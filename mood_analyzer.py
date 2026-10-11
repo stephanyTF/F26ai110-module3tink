@@ -128,6 +128,13 @@ class MoodAnalyzer:
                 score += 1
             elif t in self.negative_words:
                 score -= 1
+            #detect negation and adjust score accordingly
+            elif "_" in t:
+                negated_word = t.split("_")[1]
+                if negated_word in self.positive_words:
+                    score -= 1
+                elif negated_word in self.negative_words:
+                    score += 1
         #   3. Increase the score for positive words, decrease for negative words.
         #   4. Return the total score.
         return score
