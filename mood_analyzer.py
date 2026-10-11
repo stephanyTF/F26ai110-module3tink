@@ -59,7 +59,11 @@ class MoodAnalyzer:
             if skip_next:
                 skip_next = False
                 continue
-
+            #check for too like "not too bad" and treat it as a single negation
+            if token in negation_words and i + 2 < len(tokens) and tokens[i + 1] == "too":
+                modified_tokens.append(f"{token}_{tokens[i + 1]}_{tokens[i + 2]}")
+                skip_next = True
+                continue
             if token in negation_words and i + 1 < len(tokens):
                 modified_tokens.append(f"{token}_{tokens[i + 1]}")
                 skip_next = True
@@ -148,9 +152,16 @@ class MoodAnalyzer:
                     score -= 3
             #detect negation and adjust score accordingly
             elif "_" in t:
-                negated_word = t.split("_")[1]
+                #handle if there's "too"
+                if t.split("_")[1] == "too":
+                    negated_word = t.split("_")[2]
+                else:
+                    negated_word = t.split("_")[1]
                 if negated_word in self.positive_words:
-                    score -= 3
+                    if "sure" == negated_word:
+                        score -= 1  # "not sure" is less negative than other negations
+                    else:
+                        score -= 3
                 elif negated_word in self.negative_words:
                     score += 3
         # 3. Increase the score for positive words, decrease for negative words.
@@ -192,6 +203,7 @@ class MoodAnalyzer:
       
 
         score = self.score_text(text)
+        #print("here's the score: ", score)
 
         if score == 0:
             return "neutral"
