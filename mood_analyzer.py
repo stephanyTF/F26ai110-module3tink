@@ -11,7 +11,7 @@ This class starts with very simple logic:
 
 from typing import List, Dict, Tuple, Optional
 
-from dataset import POSITIVE_WORDS, NEGATIVE_WORDS
+from dataset import POSITIVE_WORDS, NEGATIVE_WORDS, NEGATIVE_CONTEXT_WORDS
 
 
 class MoodAnalyzer:
@@ -31,6 +31,9 @@ class MoodAnalyzer:
         # Store as sets for faster lookup.
         self.positive_words = set(w.lower() for w in positive_words)
         self.negative_words = set(w.lower() for w in negative_words)
+
+        #initalize sarcasm flag
+        self.sarcasm = False
 
     # ---------------------------------------------------------------------
     # Preprocessing
@@ -104,6 +107,15 @@ class MoodAnalyzer:
     # Scoring logic
     # ---------------------------------------------------------------------
 
+    def detect_sarcasm(self, tokens: List[str]) -> bool:
+        #detects sarcasm
+        sarcasm_flag = False
+        for w in tokens:
+            if w in NEGATIVE_CONTEXT_WORDS:
+                sarcasm_flag = True
+                break
+        return sarcasm_flag
+
     def score_text(self, text: str) -> int:
         """
         Compute a numeric "mood score" for the given text.
@@ -138,11 +150,13 @@ class MoodAnalyzer:
             elif "_" in t:
                 negated_word = t.split("_")[1]
                 if negated_word in self.positive_words:
-                    score -= 1
+                    score -= 3
                 elif negated_word in self.negative_words:
-                    score += 1
-        #   3. Increase the score for positive words, decrease for negative words.
-        #   4. Return the total score.
+                    score += 3
+        # 3. Increase the score for positive words, decrease for negative words.
+        # 4. Detect sarcasm and adjust the score accordingly
+        self.sarcasm = self.detect_sarcasm(tokens)  
+        # 5 Return the total score.
         return score
         
        
@@ -174,12 +188,17 @@ class MoodAnalyzer:
         #   2. Return "positive" if the score is above 0.
         #   3. Return "negative" if the score is below 0.
         #   4. Return "neutral" otherwise.
+
+      
+
         score = self.score_text(text)
-        #mixed range -2 to 2
+
         if score == 0:
             return "neutral"
-        if -2 <= score <= 2:
+        if -2 <= score <= 2:     #mixed range -2 to 2
             return "mixed"
+        elif score > 0 and self.sarcasm: 
+            return "sarcastic / mixed"
         elif score > 0:
             return "positive"
         elif score < 0:

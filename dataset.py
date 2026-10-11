@@ -39,6 +39,14 @@ NEGATIVE_WORDS = [
     "boring",
 ]
 
+NEGATIVE_CONTEXT_WORDS = [
+    "traffic",
+    "stuck",
+    "Monday",
+    "waiting",
+    "homework",
+    "flat tire",
+]
 # ---------------------------------------------------------------------
 # Starter labeled dataset
 # ---------------------------------------------------------------------
