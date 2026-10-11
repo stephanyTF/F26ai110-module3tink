@@ -125,9 +125,15 @@ class MoodAnalyzer:
         score = 0
         for t in tokens:
             if t in self.positive_words:
-                score += 1
+                if score < 0:
+                    score += 1  # If the score is negative, a positive word should increase it by 1
+                else:
+                    score += 3
             elif t in self.negative_words:
-                score -= 1
+                if score > 0:
+                    score -= 1  # If the score is positive, a negative word should decrease it by 1
+                else:
+                    score -= 3
             #detect negation and adjust score accordingly
             elif "_" in t:
                 negated_word = t.split("_")[1]
@@ -138,9 +144,8 @@ class MoodAnalyzer:
         #   3. Increase the score for positive words, decrease for negative words.
         #   4. Return the total score.
         return score
-        #
-        # Hint: if you implement negation, you may want to look at pairs of tokens,
-        # like ("not", "happy") or ("never", "fun").
+        
+       
        
        
 
@@ -170,12 +175,16 @@ class MoodAnalyzer:
         #   3. Return "negative" if the score is below 0.
         #   4. Return "neutral" otherwise.
         score = self.score_text(text)
-        if score > 0:
+        #mixed range -2 to 2
+        if score == 0:
+            return "neutral"
+        if -2 <= score <= 2:
+            return "mixed"
+        elif score > 0:
             return "positive"
         elif score < 0:
             return "negative"
-        else:
-            return "neutral"
+
 
     # ---------------------------------------------------------------------
     # Explanations (optional but recommended)
