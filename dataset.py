@@ -126,3 +126,4 @@ TRUE_LABELS = [
 
 #Remember to keep them aligned:
 print(len(SAMPLE_POSTS))
+print("matching post and lables: ", len(SAMPLE_POSTS) == len(TRUE_LABELS))
