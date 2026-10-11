@@ -10,16 +10,22 @@ You may complete this model card for whichever version you used, or compare both
 ## 1. Model Overview
 
 **Model type:**  
-Describe whether you used the rule based model, the ML model, or both.  
-Example: “I used the rule based model only” or “I compared both models.”
+I used the rule based model only
 
 **Intended purpose:**  
-What is this model trying to do?  
-Example: classify short text messages as moods like positive, negative, neutral, or mixed.
+Classify short text messages as moods like positive, negative, neutral, or mixed.
 
 **How it works (brief):**  
-For the rule based version, describe the scoring rules you created.  
-For the ML version, describe how training works at a high level (no math needed).
+- Positive words increment score by 3
+- Negative words decrement score by 3  
+- Negation rules  
+- Sarcasm  
+- Threshold decisions for labels in scoring:
+    - Positive: score > 3
+    - Negative: score < -3
+    - Neutral: score = 0
+    - Mixed: -2 <= score <= 2
+    - Sarcastic: score > 3 and sarcastic if flagged true
 
 
 
@@ -27,21 +33,19 @@ For the ML version, describe how training works at a high level (no math needed)
 
 **Dataset description:**  
 Summarize how many posts are in `SAMPLE_POSTS` and how you added new ones.
+13 posts are in `SAMPLE_POSTS` and I added new ones based on topics that haven't been covered yet and introduces complexity (ex: have positive and negative words)
 
 **Labeling process:**  
-Explain how you chose labels for your new examples.  
-Mention any posts that were hard to label or could have multiple valid labels.
+I used a rigid ruling structure and conditional flags to mark certain cases such as negation or sarcasm that contribute to hte label scoring. 
 
 **Important characteristics of your dataset:**  
-Examples you might include:  
 
-- Contains slang or emojis  
-- Includes sarcasm  
 - Some posts express mixed feelings  
 - Contains short or ambiguous messages
 
 **Possible issues with the dataset:**  
-Think about imbalance, ambiguity, or missing kinds of language.
+- Unable to add emojis so unable to test how model will perform with emoji embedded messages
+- sentences are short and straightforward
 
 ## 3. How the Rule Based Model Works (if used)
 
@@ -49,18 +53,16 @@ Think about imbalance, ambiguity, or missing kinds of language.
 Describe the modeling choices you made.  
 Examples:  
 
-- How positive and negative words affect score  
-- Negation rules you added  
-- Weighted words  
-- Emoji handling  
-- Threshold decisions for labels
+- I love this class so much -> positive
+- Today was a terrible day -> negative
+- I love traffic -> sarcastic
+
 
 **Strengths of this approach:**  
-Where does it behave predictably or reasonably well?
+It's easy to define the rules and set up
 
 **Weaknesses of this approach:**  
-Where does it fail?  
-Examples: sarcasm, subtlety, mixed moods, unfamiliar slang.
+Rules are rigid and may not capture ambiguous or complex sentences accurately.
 
 ## 4. How the ML Model Works (if used)
 

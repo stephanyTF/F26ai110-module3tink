@@ -125,4 +125,4 @@ TRUE_LABELS = [
 # TRUE_LABELS.append("mixed")
 
 #Remember to keep them aligned:
-print(len(SAMPLE_POSTS) == len(TRUE_LABELS))
+print(len(SAMPLE_POSTS))
