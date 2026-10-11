@@ -62,9 +62,10 @@ Examples:
 It's easy to define the rules and set up
 
 **Weaknesses of this approach:**  
-Rules are rigid and may not capture ambiguous or complex sentences accurately.
+Rules are rigid and may not capture ambiguous or complex sentences accurately. An overt bias is that the rigid model performs better on neutral, formal language (not fit for slang)
 
 ## 4. How the ML Model Works (if used)
+*didn't use the ML model
 
 **Features used:**  
 Describe the representation.  
@@ -84,30 +85,28 @@ Weaknesses might include overfitting to the training data or picking up spurious
 
 **How you evaluated the model:**  
 Both versions can be evaluated on the labeled posts in `dataset.py`.  
-Describe what accuracy you observed.
+Rigid Rules: 93% accurate
+ML Model: 100% accurate
 
 **Examples of correct predictions:**  
-Provide 2 or 3 examples and explain why they were correct.
+"I'm doing not too bad." | both systems predicted mixed correctly by picking up on the negated context to know that there is complexity in the sentence
+
+"I totally love getting stuck in traffic, it's the best part of my day" | Both systems picked up sarcasm because traffic is a negative contextual word and mixed in with the positive words, it's leaning towards a more negative tone
 
 **Examples of incorrect predictions:**  
-Provide 2 or 3 examples and explain why the model made a mistake.  
-If you used both models, show how their failures differed.
+"The instructions are a little confusing, but I think if I work on it more, I'll get it" | The rule based system was unable to detect the latter part as positive since there's not one positive words that signals it. Its distinct connotative word list is unable to capture the multiple words ("I'll get it") that indicates the speaker's hopefullness. However the ML model was able to correctly label it. 
 
 ## 6. Limitations
 
-Describe the most important limitations.  
-Examples:  
-
-- The dataset is small  
+- The dataset is not varied (missing slang, emojis) 
+- Limited dataset size
 - The model does not generalize to longer posts  
 - It cannot detect sarcasm reliably  
 - It depends heavily on the words you chose or labeled
 
 ## 7. Ethical Considerations
 
-Discuss any potential impacts of using mood detection in real applications.  
-Examples: 
-
+- Inappropiate responses to langauge with slang or sarcasm
 - Misclassifying a message expressing distress  
 - Misinterpreting mood for certain language communities  
 - Privacy considerations if analyzing personal messages
@@ -115,8 +114,8 @@ Examples:
 ## 8. Ideas for Improvement
 
 List ways to improve either model.  
-Possible directions:  
 
+- define more distinct labels to ensure the system responses are more tailored
 - Add more labeled data  
 - Use TF IDF instead of CountVectorizer  
 - Add better preprocessing for emojis or slang  
